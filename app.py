@@ -8,101 +8,42 @@ st.set_page_config(
 )
 
 # -----------------------------
-# 화면 디자인 CSS
+# 간단한 디자인
 # -----------------------------
 st.markdown("""
 <style>
-.stApp {
-    background:
-        linear-gradient(rgba(7, 20, 47, 0.86), rgba(7, 20, 47, 0.88)),
-        linear-gradient(180deg, #07142f 0%, #0b1f4d 48%, #0b5d2a 100%);
-    color: white;
-}
-
-.main-title {
-    background: rgba(255, 255, 255, 0.12);
-    padding: 28px;
-    border-radius: 22px;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.25);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.35);
-    margin-bottom: 24px;
-}
-
-.main-title h1 {
-    color: white;
-    font-size: 42px;
-    margin-bottom: 8px;
-}
-
-.main-title p {
-    color: #dbe7ff;
-    font-size: 18px;
-}
-
-.info-card {
-    background: rgba(255,255,255,0.94);
-    color: #07142f;
-    padding: 18px 22px;
-    border-radius: 18px;
-    margin-bottom: 18px;
-    border-left: 8px solid #132257;
-}
-
-.quiz-card {
-    background: rgba(255,255,255,0.96);
-    color: #07142f;
-    padding: 18px 22px;
-    border-radius: 18px;
-    margin: 18px 0 8px 0;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.22);
-    border-left: 7px solid #0b5d2a;
-}
-
-.result-card {
-    background: rgba(255,255,255,0.96);
-    color: #07142f;
-    padding: 24px;
-    border-radius: 20px;
-    margin-top: 20px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.28);
-}
-
-.stButton > button {
+.quiz-box {
+    background-color: #f7f9fc;
+    padding: 16px;
     border-radius: 12px;
-    font-weight: bold;
+    border-left: 6px solid #132257;
+    margin-bottom: 12px;
 }
 
-[data-testid="stRadio"] {
-    background: rgba(255,255,255,0.88);
-    padding: 10px;
+.result-box {
+    background-color: #f0f8f4;
+    padding: 18px;
     border-radius: 12px;
-    color: #07142f;
+    border-left: 6px solid #0b7a34;
+    margin-top: 16px;
 }
 </style>
 """, unsafe_allow_html=True)
 
-
 # -----------------------------
 # 첫 화면
 # -----------------------------
-st.markdown("""
-<div class="main-title">
-    <h1>⚽ COYS Quiz</h1>
-    <p>Tottenham Hotspur Fan Knowledge Test</p>
-    <p>토트넘 홈구장 피치 위에서 퀴즈를 푸는 팬 테스트</p>
-</div>
-""", unsafe_allow_html=True)
+st.title("⚽ COYS Quiz: Tottenham Fan Test")
 
 st.markdown("""
-<div class="info-card">
-    <h3>📌 프로젝트 정보</h3>
-    <p><b>과목:</b> 오픈소스소프트웨어실습 중간고사 대체 과제</p>
-    <p><b>학번:</b> 2022204068</p>
-    <p><b>이름:</b> 최인하</p>
-    <p><b>주제:</b> 토트넘 홋스퍼 팬 지식 퀴즈 웹 애플리케이션</p>
-</div>
-""", unsafe_allow_html=True)
+### 🏟️ 토트넘 홋스퍼 팬 지식 퀴즈
+ 
+토트넘의 역사·상징·응원 구호·라이벌 관련 문제를 풀어보는 웹 애플리케이션입니다.
+
+- **학번:** 2022204068  
+- **이름:** 최인하  
+- **과목:** 오픈소스소프트웨어실습 중간고사 대체 과제
+""")
 
 st.divider()
 
@@ -113,8 +54,8 @@ st.divider()
 @st.cache_data
 def load_quiz_data():
     """
-    퀴즈 데이터는 앱이 실행될 때마다 반복해서 새로 만들 필요가 없으므로
-    Streamlit 캐싱 기능을 사용하여 한 번 불러온 데이터를 재사용한다.
+    퀴즈 데이터는 매번 새로 생성할 필요가 없으므로
+    @st.cache_data를 사용해 한 번 불러온 데이터를 재사용한다.
     """
     time.sleep(1)
 
@@ -204,13 +145,13 @@ if not st.session_state.logged_in:
         if user_id == "spurs" and password == "1882":
             st.session_state.logged_in = True
             st.session_state.username = user_id
-            st.success("로그인 성공! COYS Quiz를 시작할 수 있습니다.")
+            st.success("로그인 성공! 경기장에 입장했습니다. ⚽")
             st.rerun()
         else:
             st.error("로그인 실패: 아이디 또는 비밀번호가 올바르지 않습니다.")
 
 else:
-    st.success(f"{st.session_state.username}님, 로그인되었습니다.")
+    st.success(f"{st.session_state.username}님, 로그인되었습니다. COYS! ⚽")
 
     if st.button("로그아웃"):
         st.session_state.logged_in = False
@@ -229,6 +170,9 @@ else:
 
     st.info("퀴즈 데이터는 @st.cache_data를 사용하여 캐싱됩니다.")
 
+    st.markdown("### ⚽ Kick-off!")
+    st.progress(0)
+
     score = 0
     user_answers = []
 
@@ -236,21 +180,21 @@ else:
         for i, q in enumerate(quiz_data):
             st.markdown(
                 f"""
-                <div class="quiz-card">
-                    <h3>Q{i + 1}. {q['question']}</h3>
+                <div class="quiz-box">
+                    <b>⚽ Q{i + 1}. {q['question']}</b>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
             selected = st.radio(
-                label="정답을 선택하세요.",
+                label="축구공을 찬다고 생각하고 정답을 선택하세요.",
                 options=q["options"],
                 key=f"question_{i}"
             )
             user_answers.append(selected)
 
-        submitted = st.form_submit_button("결과 확인하기")
+        submitted = st.form_submit_button("🏁 경기 종료! 결과 확인하기")
 
     if submitted:
         st.divider()
@@ -260,12 +204,16 @@ else:
             if user_answers[i] == q["answer"]:
                 score += 1
 
+        percentage = score / len(quiz_data)
+
+        st.progress(percentage)
+
         st.markdown(
             f"""
-            <div class="result-card">
-                <h2>🏟️ Match Result</h2>
+            <div class="result-box">
+                <h3>⚽ Match Result</h3>
                 <p>총 {len(quiz_data)}문제 중 <b>{score}문제</b>를 맞혔습니다.</p>
-                <p>당신의 토트넘 팬 지식을 기준으로 등급이 결정됩니다.</p>
+                <p>점수에 따라 토트넘 팬 등급이 결정됩니다.</p>
             </div>
             """,
             unsafe_allow_html=True
@@ -286,11 +234,11 @@ else:
         st.table(grade_table)
 
         if score <= 3:
-            st.warning("당신의 등급은 **입문 팬**입니다. 이제부터 토트넘을 더 알아가면 됩니다!")
+            st.warning("당신의 등급은 **입문 팬**입니다. 아직 전반전입니다. 토트넘을 더 알아가 봅시다!")
         elif score <= 7:
-            st.info("당신의 등급은 **꽤 아는 스퍼스 팬**입니다. 기본 지식이 좋습니다!")
+            st.info("당신의 등급은 **꽤 아는 스퍼스 팬**입니다. 좋은 경기력을 보여줬습니다!")
         else:
-            st.success("당신의 등급은 **진짜 COYS 팬**입니다! 토트넘에 대한 지식이 훌륭합니다.")
+            st.success("당신의 등급은 **진짜 COYS 팬**입니다! 오늘의 Man of the Match입니다!")
 
         st.divider()
 
@@ -298,8 +246,6 @@ else:
 
         for i, q in enumerate(quiz_data):
             if user_answers[i] == q["answer"]:
-                st.write(f"Q{i + 1}. ✅ 정답: {q['answer']}")
+                st.write(f"⚽ Q{i + 1}. ✅ 정답: {q['answer']}")
             else:
-                st.write(
-                    f"Q{i + 1}. ❌ 내 답: {user_answers[i]} / 정답: {q['answer']}"
-                )
+                st.write(f"⚽ Q{i + 1}. ❌ 내 답: {user_answers[i]} / 정답: {q['answer']}")
