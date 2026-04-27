@@ -61,9 +61,9 @@ def load_quiz_data():
             "answer": "Come On You Spurs"
         },
         {
-            "question": "손흥민 선수가 뛰고 있는 잉글랜드 축구팀은?",
-            "options": ["첼시", "토트넘 홋스퍼", "리버풀", "맨체스터 시티"],
-            "answer": "토트넘 홋스퍼"
+            "question": "토트넘 홋스퍼가 마지막으로 잉글랜드 1부 리그 우승을 차지한 시기는?",
+            "options": ["1950-51 시즌", "1960-61 시즌", "1970-71 시즌", "1980-81 시즌"],
+            "answer": "1960-61 시즌"
         },
         {
             "question": "토트넘의 상징 동물로 가장 적절한 것은?",
@@ -86,9 +86,9 @@ def load_quiz_data():
             "answer": "흰 상의와 남색 바지"
         },
         {
-            "question": "토트넘 팬들이 자주 사용하는 응원 표현은?",
-            "options": ["YNWA", "COYS", "KTBFFH", "Hala Madrid"],
-            "answer": "COYS"
+            "question": "토트넘 홋스퍼 스타디움이 개장한 연도는?",
+            "options": ["2015년", "2017년", "2019년", "2021년"],
+            "answer": "2019년"
         }
     ]
 
