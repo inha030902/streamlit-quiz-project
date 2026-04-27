@@ -188,7 +188,7 @@ else:
             )
 
             selected = st.radio(
-                label="축구공을 찬다고 생각하고 정답을 선택하세요.",
+                label="답을 선택하세요:",
                 options=q["options"],
                 key=f"question_{i}"
             )
