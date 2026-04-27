@@ -8,17 +8,101 @@ st.set_page_config(
 )
 
 # -----------------------------
-# 첫 화면 정보
+# 화면 디자인 CSS
 # -----------------------------
-st.title("⚽ COYS Quiz: Tottenham Fan Test")
+st.markdown("""
+<style>
+.stApp {
+    background:
+        linear-gradient(rgba(7, 20, 47, 0.86), rgba(7, 20, 47, 0.88)),
+        linear-gradient(180deg, #07142f 0%, #0b1f4d 48%, #0b5d2a 100%);
+    color: white;
+}
+
+.main-title {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 28px;
+    border-radius: 22px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+    margin-bottom: 24px;
+}
+
+.main-title h1 {
+    color: white;
+    font-size: 42px;
+    margin-bottom: 8px;
+}
+
+.main-title p {
+    color: #dbe7ff;
+    font-size: 18px;
+}
+
+.info-card {
+    background: rgba(255,255,255,0.94);
+    color: #07142f;
+    padding: 18px 22px;
+    border-radius: 18px;
+    margin-bottom: 18px;
+    border-left: 8px solid #132257;
+}
+
+.quiz-card {
+    background: rgba(255,255,255,0.96);
+    color: #07142f;
+    padding: 18px 22px;
+    border-radius: 18px;
+    margin: 18px 0 8px 0;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+    border-left: 7px solid #0b5d2a;
+}
+
+.result-card {
+    background: rgba(255,255,255,0.96);
+    color: #07142f;
+    padding: 24px;
+    border-radius: 20px;
+    margin-top: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.28);
+}
+
+.stButton > button {
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+[data-testid="stRadio"] {
+    background: rgba(255,255,255,0.88);
+    padding: 10px;
+    border-radius: 12px;
+    color: #07142f;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+# -----------------------------
+# 첫 화면
+# -----------------------------
+st.markdown("""
+<div class="main-title">
+    <h1>⚽ COYS Quiz</h1>
+    <p>Tottenham Hotspur Fan Knowledge Test</p>
+    <p>토트넘 홈구장 피치 위에서 퀴즈를 푸는 팬 테스트</p>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("""
-### 중간고사 대체 과제 - Streamlit
-
-- **학번:** 2022204068  
-- **이름:** 최인하  
-- **주제:** 토트넘 홋스퍼 팬 지식 퀴즈 웹 애플리케이션
-""")
+<div class="info-card">
+    <h3>📌 프로젝트 정보</h3>
+    <p><b>과목:</b> 오픈소스소프트웨어실습 중간고사 대체 과제</p>
+    <p><b>학번:</b> 2022204068</p>
+    <p><b>이름:</b> 최인하</p>
+    <p><b>주제:</b> 토트넘 홋스퍼 팬 지식 퀴즈 웹 애플리케이션</p>
+</div>
+""", unsafe_allow_html=True)
 
 st.divider()
 
@@ -32,7 +116,7 @@ def load_quiz_data():
     퀴즈 데이터는 앱이 실행될 때마다 반복해서 새로 만들 필요가 없으므로
     Streamlit 캐싱 기능을 사용하여 한 번 불러온 데이터를 재사용한다.
     """
-    time.sleep(1)  # 캐싱 효과 시연용 지연 시간
+    time.sleep(1)
 
     questions = [
         {
@@ -108,7 +192,7 @@ if "username" not in st.session_state:
 # -----------------------------
 # 로그인 기능
 # -----------------------------
-st.subheader("🔐 토트넘 팬 로그인")
+st.subheader("🔐 Spurs Fan Login")
 
 if not st.session_state.logged_in:
     user_id = st.text_input("아이디")
@@ -138,7 +222,7 @@ else:
     # -----------------------------
     # 퀴즈 기능
     # -----------------------------
-    st.subheader("📝 Tottenham Hotspur Quiz")
+    st.subheader("🏟️ Tottenham Hotspur Quiz")
 
     with st.spinner("퀴즈 데이터를 불러오는 중입니다..."):
         quiz_data = load_quiz_data()
@@ -150,7 +234,15 @@ else:
 
     with st.form("quiz_form"):
         for i, q in enumerate(quiz_data):
-            st.markdown(f"### Q{i + 1}. {q['question']}")
+            st.markdown(
+                f"""
+                <div class="quiz-card">
+                    <h3>Q{i + 1}. {q['question']}</h3>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
             selected = st.radio(
                 label="정답을 선택하세요.",
                 options=q["options"],
@@ -168,7 +260,16 @@ else:
             if user_answers[i] == q["answer"]:
                 score += 1
 
-        st.write(f"총 {len(quiz_data)}문제 중 **{score}문제**를 맞혔습니다.")
+        st.markdown(
+            f"""
+            <div class="result-card">
+                <h2>🏟️ Match Result</h2>
+                <p>총 {len(quiz_data)}문제 중 <b>{score}문제</b>를 맞혔습니다.</p>
+                <p>당신의 토트넘 팬 지식을 기준으로 등급이 결정됩니다.</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
         st.subheader("📊 등급 체계")
 
@@ -193,7 +294,7 @@ else:
 
         st.divider()
 
-        st.subheader("정답 확인")
+        st.subheader("✅ 정답 확인")
 
         for i, q in enumerate(quiz_data):
             if user_answers[i] == q["answer"]:
