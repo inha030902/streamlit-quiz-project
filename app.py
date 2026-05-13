@@ -57,6 +57,7 @@ def load_quiz_data():
     퀴즈 데이터는 매번 새로 생성할 필요가 없으므로
     @st.cache_data를 사용해 한 번 불러온 데이터를 재사용한다.
     """
+    print("[LOG] load_quiz_data() called - quiz data loading or cached data used")
     time.sleep(1)
 
     questions = [
@@ -142,20 +143,26 @@ if not st.session_state.logged_in:
     st.caption("테스트 계정: ID = spurs / PW = 1882")
 
     if st.button("로그인"):
+        print(f"[LOG] Login button clicked. user_id={user_id}")
+
         if user_id == "spurs" and password == "1882":
             st.session_state.logged_in = True
             st.session_state.username = user_id
+            print("[LOG] Login success")
             st.success("로그인 성공! 경기장에 입장했습니다. ⚽")
             st.rerun()
         else:
+            print("[LOG] Login failed")
             st.error("로그인 실패: 아이디 또는 비밀번호가 올바르지 않습니다.")
 
 else:
     st.success(f"{st.session_state.username}님, 로그인되었습니다. COYS! ⚽")
 
     if st.button("로그아웃"):
+        print(f"[LOG] Logout button clicked. user_id={st.session_state.username}")
         st.session_state.logged_in = False
         st.session_state.username = ""
+        print("[LOG] Logout success")
         st.rerun()
 
     st.divider()
@@ -197,12 +204,16 @@ else:
         submitted = st.form_submit_button("🏁 경기 종료! 결과 확인하기")
 
     if submitted:
+        print("[LOG] Quiz submitted")
+
         st.divider()
         st.subheader("🏆 퀴즈 결과")
 
         for i, q in enumerate(quiz_data):
             if user_answers[i] == q["answer"]:
                 score += 1
+
+        print(f"[LOG] Quiz score calculated. score={score}/{len(quiz_data)}")
 
         percentage = score / len(quiz_data)
 
@@ -234,10 +245,13 @@ else:
         st.table(grade_table)
 
         if score <= 3:
+            print("[LOG] Grade result: 입문 팬")
             st.warning("당신의 등급은 **입문 팬**입니다. 아직 전반전입니다. 토트넘을 더 알아가 봅시다!")
         elif score <= 7:
+            print("[LOG] Grade result: 꽤 아는 스퍼스 팬")
             st.info("당신의 등급은 **꽤 아는 스퍼스 팬**입니다. 좋은 경기력을 보여줬습니다!")
         else:
+            print("[LOG] Grade result: 진짜 COYS 팬")
             st.success("당신의 등급은 **진짜 COYS 팬**입니다! 오늘의 Man of the Match입니다!")
 
         st.divider()
